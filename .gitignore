@@ -1,0 +1,9 @@
+# Ignorer l'environnement virtuel Python
+venv/
+
+# Ignorer les fichiers de variables d'environnement
+.env
+
+# Fichiers et dossiers générés par Python (bonne pratique)
+__pycache__/
+*.pyc
