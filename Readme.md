@@ -1,41 +1,69 @@
-#  Projet RAG : Chatbot Documentaire Intelligent
+# 🤖 Chatbot RAG : Assistant Documentaire Intelligent
 
-Bienvenue dans ce projet de **Retrieval Augmented Generation (RAG)**. Ce système permet d'interroger une base de documents locale (fichiers texte) et d'obtenir des réponses précises générées par une Intelligence Artificielle, en évitant les hallucinations grâce à une recherche sémantique vectorielle.
+Ce projet implémente un système de **RAG (Retrieval-Augmented Generation)** haute performance. Il permet d'interagir avec une base de connaissances privée (fichiers textes) via une interface conversationnelle.
 
-##  Introduction
-
-L'objectif de ce projet est de créer un assistant capable de :
-1.  **Lire et comprendre** des documents métiers (placés dans un dossier `Data`).
-2.  **Indexer** ces connaissances dans une base de données vectorielle (PostgreSQL).
-3.  **Répondre** aux questions de l'utilisateur en utilisant un modèle de langage performant (LLM).
-
-Le projet utilise **PostgreSQL (pgvector)** pour le stockage et **Qwen 2.5** comme cerveau pour la génération de texte.
+Le système combine la confidentialité des **embeddings locaux** (via SentenceTransformers) avec la puissance et la rapidité de l'API **Groq (Llama 3.3)** pour la génération de réponses.
 
 ---
 
-## 📂 Description des Fichiers Source
+## 🏗️ Architecture du Projet
 
-Voici le rôle de chaque script Python présent dans ce dépôt :
+Le fonctionnement repose sur deux pipelines distincts :
 
-### 1. `Model_embedding_plusPerformanat.py` (L'Indexeur)
-Ce script est responsable de la phase de **préparation des données**.
-*   **Fonction :** Il parcourt le dossier `Data/`, lit tous les fichiers `.txt`, nettoie le texte et le transforme en vecteurs numériques (embeddings).
-*   **Technique :** Il utilise le modèle `paraphrase-multilingual-mpnet-base-v2` (dimension 768) pour capturer le sens des phrases.
-*   **Stockage :** Il envoie ces vecteurs vers une base de données **PostgreSQL** pour permettre une recherche ultra-rapide plus tard.
+1.  **Pipeline d'Ingestion (Indexation)** :
+    *   Lecture des documents bruts dans le dossier `Data/`.
+    *   Découpage (Chunking) et nettoyage du texte.
+    *   Vectorisation via le modèle local `paraphrase-multilingual-mpnet-base-v2` (Dimension 768).
+    *   Stockage dans **PostgreSQL** avec l'extension `pgvector`.
 
-### 2. `Model_LLM.py` (Le Cerveau)
-Ce script gère l'**intelligence et la réponse**.
-*   **Fonction :** Il charge le modèle de langage (LLM) `Qwen/Qwen2.5-1.5B-Instruct` sur la carte graphique (GPU).
-*   **Logique :** Il prend la question de l'utilisateur, recherche le passage pertinent dans les documents (ou scanne les fichiers), et génère une réponse en français basée **uniquement** sur le contexte trouvé.
-*   **Sécurité :** Il inclut un "Prompt Strict" pour forcer le modèle à dire "NON_TROUVE" s'il ne connaît pas la réponse, garantissant la fiabilité.
+2.  **Pipeline de Chat (Inférence)** :
+    *   Analyse de la question utilisateur.
+    *   Recherche sémantique (Cosine Similarity) dans PostgreSQL pour trouver les passages pertinents.
+    *   Construction du prompt avec le contexte récupéré.
+    *   Génération de la réponse via **Groq (Llama 3.3-70b)**.
 
 ---
 
-## 🛠️ Installation et Configuration
+## 📂 Structure du Projet
 
-Suivez ces étapes pour lancer le projet sur votre machine.
-
-### Étape 1 : Cloner le projet
-```bash
+```text
+Chatbot-Rag/
+├── Data/                               # 📁 Base de connaissances (vos fichiers .txt)
+├── main_console.py                     # 🚀 Interface Principale (Console + Groq API)
+├── Model_embedding_plusPerformanat.py  # ⚙️ Script d'Indexation (Embedding -> DB)
+├── requirements.txt                    # 📦 Dépendances Python
+└── README.md                           # 📄 Documentation
+🚀 Installation et Configuration
+1. Cloner le projet
 git clone https://github.com/votre-compte/Chatbot-Rag.git
-cd Chatbot-Rag
+cd Chatbot-Rag  
+2. Créer l'environnement virtuel
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
+
+# Mac / Linux
+python3 -m venv venv
+source venv/bin/activate
+3. Installer les dépendances
+pip install -r requirement.txt
+4. Configuration de la Base de Données (PostgreSQL)
+-- 1. Créer la base de données
+CREATE DATABASE rag_chatbot;
+
+-- 2. Se connecter à la base
+\c rag_chatbot
+
+-- 3. Activer l'extension vectorielle (INDISPENSABLE)
+CREATE EXTENSION IF NOT EXISTS vector;
+💻 Utilisation
+Étape 1 : Indexer vos documents (Ingestion)
+python Model_embedding_plusPerformanat.py
+Étape 2 : Lancer le Chatbot
+python main_console.py
+⚙️ Configuration de l'API
+GROQ_API_KEY = "gsk_votre_cle_api_ici..."
+📊 Performances Techniques
+Embedding : sentence-transformers/paraphrase-multilingual-mpnet-base-v2 (Dim 768).
+LLM : Llama-3.3-70b-versatile via Groq (Inférence ultra-rapide).
+Base de Données : PostgreSQL + pgvector (Recherche par similarité cosinus).
