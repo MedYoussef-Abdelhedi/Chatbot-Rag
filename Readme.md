@@ -33,31 +33,40 @@ Le système repose sur deux pipelines :
 
 ---
 
-## 📂 Structure du Projet
-
-```text
+📂 Structure du Projet
 Chatbot-Rag/
 ├── Data/                               # Base de connaissances (vos fichiers .txt)
 ├── main_console.py                     # Interface Console (Chat avec Groq)
 ├── Model_embedding_plusPerformanat.py  # Ingestion + Embedding + Indexation
 ├── requirements.txt                    # Dépendances Python
 └── README.md                           # Documentation
-🔧 Installation & Configuration1️
-1️⃣ Cloner le projet
+
+🔧 Installation & Configuration
+### **1️⃣ Cloner le projet**
 git clone https://github.com/votre-compte/Chatbot-Rag.git
 cd Chatbot-Rag
-2️⃣ Créer l’environnement virtuel
+
+### **2️⃣ Créer l’environnement virtuel**
 python -m venv venv
 .\venv\Scripts\activate   # Windows
-3️⃣ Installer les dépendances
+
+### **3️⃣ Installer les dépendances**
 pip install -r requirements.txt
+
 🗄️ Configuration de PostgreSQL
+1. Créer la base de données
 CREATE DATABASE rag_chatbot;
+
 2. Se connecter
 \c rag_chatbot;
+
 3. Activer pgvector
 CREATE EXTENSION IF NOT EXISTS vector;
-🔐 Configuration des Variables d’Environnement
+
+### **🔐 Configuration des Variables d’Environnement**
+
+Crée un fichier .env :
+
 GROQ_API_KEY="gsk_xxxxxxxxxxxxxxxxx"
 
 DB_HOST=localhost
@@ -67,8 +76,10 @@ DB_USER=postgres
 DB_PASSWORD=mot_de_passe
 
 EMBEDDING_MODEL=paraphrase-multilingual-mpnet-base-v2
+
 🚀 Utilisation
-1️⃣ Indexer vos documents
+### **1️⃣ Indexer vos documents**
 python Model_embedding_plusPerformanat.py
-2️⃣ Lancer le chatbot
+
+### **2️⃣ Lancer le chatbot**
 python main_console.py
