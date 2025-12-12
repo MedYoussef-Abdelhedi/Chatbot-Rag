@@ -1,31 +1,35 @@
-
 # 🤖 Chatbot RAG : Assistant Documentaire Intelligent
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-PgVector-336791?style=for-the-badge&logo=postgresql)
 ![Groq](https://img.shields.io/badge/AI-Groq%20Llama3-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-Ce projet implémente un système de **RAG (Retrieval-Augmented Generation)** haute performance. Il permet d'interagir avec une base de connaissances privée (fichiers textes) via une interface conversationnelle.
+Ce projet implémente un système **RAG (Retrieval-Augmented Generation)** haute performance.  
+Il permet d'interroger une base de connaissances locale (fichiers `.txt`) à l’aide d’un **chatbot intelligent**, combinant :
 
-Le système combine la confidentialité des **embeddings locaux** (via SentenceTransformers) avec la puissance et la rapidité de l'API **Groq (Llama 3.3)** pour la génération de réponses.
+- 🔐 **Confidentialité** : embeddings générés localement  
+- ⚡ **Performance** : génération via **Groq Llama 3.3**  
+- 🧠 **Recherche sémantique** : PostgreSQL + pgvector  
 
 ---
 
 ## 🏗️ Architecture du Projet
 
-Le fonctionnement repose sur deux pipelines distincts :
+Le système repose sur deux pipelines :
 
-1.  **Pipeline d'Ingestion (Indexation)** :
-    *   Lecture des documents bruts dans le dossier `Data/`.
-    *   Découpage (Chunking) et nettoyage du texte.
-    *   Vectorisation via le modèle local `paraphrase-multilingual-mpnet-base-v2` (Dimension 768).
-    *   Stockage dans **PostgreSQL** avec l'extension `pgvector`.
+### **1️⃣ Pipeline d’Ingestion**
+- Lecture des fichiers du dossier `Data/`
+- Chunking et nettoyage du texte
+- Embeddings via :  
+  `paraphrase-multilingual-mpnet-base-v2` (768 dimensions)
+- Stockage des vecteurs dans **PostgreSQL + pgvector**
 
-2.  **Pipeline de Chat (Inférence)** :
-    *   Analyse de la question utilisateur.
-    *   Recherche sémantique (Cosine Similarity) dans PostgreSQL pour trouver les passages pertinents.
-    *   Construction du prompt avec le contexte récupéré.
-    *   Génération de la réponse via **Groq (Llama 3.3-70b)**.
+### **2️⃣ Pipeline Chat (Inférence)**
+- Analyse de la question utilisateur
+- Similarité cosinus pour récupérer les passages pertinents
+- Construction du prompt contextualisé
+- Génération via **Groq Llama 3.3 (70B)**
 
 ---
 
@@ -33,101 +37,38 @@ Le fonctionnement repose sur deux pipelines distincts :
 
 ```text
 Chatbot-Rag/
-├── Data/                               # 📁 Base de connaissances (vos fichiers .txt)
-├── main_console.py                     # 🚀 Interface Principale (Console + Groq API)
-├── Model_embedding_plusPerformanat.py  # ⚙️ Script d'Indexation (Embedding -> DB)
-├── requirements.txt                    # 📦 Dépendances Python
-└── README.md                           # 📄 Documentation
-🚀 Installation et Configuration
-1. Cloner le projet
-code
-Bash
-download
-content_copy
-expand_less
+├── Data/                               # Base de connaissances (vos fichiers .txt)
+├── main_console.py                     # Interface Console (Chat avec Groq)
+├── Model_embedding_plusPerformanat.py  # Ingestion + Embedding + Indexation
+├── requirements.txt                    # Dépendances Python
+└── README.md                           # Documentation
+🔧 Installation & Configuration1️
+1️⃣ Cloner le projet
 git clone https://github.com/votre-compte/Chatbot-Rag.git
 cd Chatbot-Rag
-2. Créer l'environnement virtuel
-
-Windows :
-
-code
-Powershell
-download
-content_copy
-expand_less
+2️⃣ Créer l’environnement virtuel
 python -m venv venv
-.\venv\Scripts\activate
-
-Mac / Linux :
-
-code
-Bash
-download
-content_copy
-expand_less
-python3 -m venv venv
-source venv/bin/activate
-3. Installer les dépendances
-code
-Bash
-download
-content_copy
-expand_less
-pip install -r requirement.txt
-4. Configuration de la Base de Données (PostgreSQL)
-
-Connectez-vous à votre base de données et exécutez ces commandes :
-
-code
-SQL
-download
-content_copy
-expand_less
--- 1. Créer la base de données
+.\venv\Scripts\activate   # Windows
+3️⃣ Installer les dépendances
+pip install -r requirements.txt
+🗄️ Configuration de PostgreSQL
 CREATE DATABASE rag_chatbot;
-
--- 2. Se connecter à la base
-\c rag_chatbot
-
--- 3. Activer l'extension vectorielle (INDISPENSABLE)
+2. Se connecter
+\c rag_chatbot;
+3. Activer pgvector
 CREATE EXTENSION IF NOT EXISTS vector;
-💻 Utilisation
-Étape 1 : Indexer vos documents (Ingestion)
+🔐 Configuration des Variables d’Environnement
+GROQ_API_KEY="gsk_xxxxxxxxxxxxxxxxx"
 
-Placez vos fichiers dans le dossier Data et lancez :
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=rag_chatbot
+DB_USER=postgres
+DB_PASSWORD=mot_de_passe
 
-code
-Bash
-download
-content_copy
-expand_less
+EMBEDDING_MODEL=paraphrase-multilingual-mpnet-base-v2
+🚀 Utilisation
+1️⃣ Indexer vos documents
 python Model_embedding_plusPerformanat.py
-Étape 2 : Lancer le Chatbot
-
-Une fois l'indexation terminée :
-
-code
-Bash
-download
-content_copy
-expand_less
+2️⃣ Lancer le chatbot
 python main_console.py
-⚙️ Configuration de l'API
-
-Pour utiliser le modèle Llama 3.3, modifiez la clé dans main_console.py :
-
-code
-Python
-download
-content_copy
-expand_less
-GROQ_API_KEY = "gsk_votre_cle_api_ici..."
-📊 Performances Techniques
-
-Embedding : sentence-transformers/paraphrase-multilingual-mpnet-base-v2 (Dim 768).
-
-LLM : Llama-3.3-70b-versatile via Groq (Inférence ultra-rapide).
-
-Base de Données : PostgreSQL + pgvector (Recherche par similarité cosinus).
-
