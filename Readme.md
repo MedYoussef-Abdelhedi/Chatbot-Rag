@@ -1,3 +1,4 @@
+
 # 🤖 Chatbot RAG : Assistant Documentaire Intelligent
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python)
@@ -37,18 +38,52 @@ Chatbot-Rag/
 ├── Model_embedding_plusPerformanat.py  # ⚙️ Script d'Indexation (Embedding -> DB)
 ├── requirements.txt                    # 📦 Dépendances Python
 └── README.md                           # 📄 Documentation
-```  <-- AJOUTE CES 3 ACCENTS ICI ET C'EST RÉPARÉ !
-
 🚀 Installation et Configuration
 1. Cloner le projet
+code
+Bash
+download
+content_copy
+expand_less
 git clone https://github.com/votre-compte/Chatbot-Rag.git
 cd Chatbot-Rag
 2. Créer l'environnement virtuel
+
+Windows :
+
+code
+Powershell
+download
+content_copy
+expand_less
 python -m venv venv
 .\venv\Scripts\activate
+
+Mac / Linux :
+
+code
+Bash
+download
+content_copy
+expand_less
+python3 -m venv venv
+source venv/bin/activate
 3. Installer les dépendances
-pip install -r requirement.txt  
+code
+Bash
+download
+content_copy
+expand_less
+pip install -r requirement.txt
 4. Configuration de la Base de Données (PostgreSQL)
+
+Connectez-vous à votre base de données et exécutez ces commandes :
+
+code
+SQL
+download
+content_copy
+expand_less
 -- 1. Créer la base de données
 CREATE DATABASE rag_chatbot;
 
@@ -59,8 +94,40 @@ CREATE DATABASE rag_chatbot;
 CREATE EXTENSION IF NOT EXISTS vector;
 💻 Utilisation
 Étape 1 : Indexer vos documents (Ingestion)
+
+Placez vos fichiers dans le dossier Data et lancez :
+
+code
+Bash
+download
+content_copy
+expand_less
 python Model_embedding_plusPerformanat.py
 Étape 2 : Lancer le Chatbot
+
+Une fois l'indexation terminée :
+
+code
+Bash
+download
+content_copy
+expand_less
 python main_console.py
 ⚙️ Configuration de l'API
+
+Pour utiliser le modèle Llama 3.3, modifiez la clé dans main_console.py :
+
+code
+Python
+download
+content_copy
+expand_less
 GROQ_API_KEY = "gsk_votre_cle_api_ici..."
+📊 Performances Techniques
+
+Embedding : sentence-transformers/paraphrase-multilingual-mpnet-base-v2 (Dim 768).
+
+LLM : Llama-3.3-70b-versatile via Groq (Inférence ultra-rapide).
+
+Base de Données : PostgreSQL + pgvector (Recherche par similarité cosinus).
+
