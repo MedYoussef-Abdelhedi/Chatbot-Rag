@@ -38,6 +38,7 @@ Chatbot-Rag/
 ├── Model_embedding_plusPerformanat.py  # ⚙️ Script d'Indexation (Embedding -> DB)
 ├── requirements.txt                    # 📦 Dépendances Python
 └── README.md                           # 📄 Documentation
+```
 🚀 Installation et Configuration
 1. Cloner le projet
 code
