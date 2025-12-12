@@ -33,7 +33,9 @@ Le système repose sur deux pipelines :
 
 ---
 
-📂 Structure du Projet
+## 📂 Structure du Projet
+
+```text
 Chatbot-Rag/
 ├── Data/                               # Base de connaissances (vos fichiers .txt)
 ├── main_console.py                     # Interface Console (Chat avec Groq)
@@ -41,7 +43,8 @@ Chatbot-Rag/
 ├── requirements.txt                    # Dépendances Python
 └── README.md                           # Documentation
 
-🔧 Installation & Configuration
+```
+## 🔧 Installation & Configuration
 ### **1️⃣ Cloner le projet**
 git clone https://github.com/votre-compte/Chatbot-Rag.git
 cd Chatbot-Rag
