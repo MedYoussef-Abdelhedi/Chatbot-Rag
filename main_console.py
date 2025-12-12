@@ -17,7 +17,7 @@ EMBEDDING_MODEL_NAME = 'sentence-transformers/paraphrase-multilingual-mpnet-base
 # Pour l'intelligence max, on utilise le 70b.
 # Ici j'ai mis le llama-3.3-70b qui est très performant, 
 # mais vous pouvez mettre "llama-3.1-8b-instant" si vous voulez encore plus de vitesse.
-GROQ_API_KEY = "VOTRE_CLE_ICI"
+GROQ_API_KEY = "votre_clef_api_groq_ici"  # Remplacez par votre clé API Groq
 GROQ_MODEL_ID = "llama-3.3-70b-versatile" 
 
 # ==========================================
